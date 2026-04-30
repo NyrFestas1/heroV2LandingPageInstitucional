@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 
@@ -54,8 +56,10 @@
             position: relative;
             width: 100%;
             height: 100vh;
-            height: 100svh; /* iOS Safari: exclui barra de endereço */
-            min-height: 100svh; /* garante que nunca ultrapasse a viewport */
+            height: 100svh;
+            /* iOS Safari: exclui barra de endereço */
+            min-height: 480px;
+            /* piso absoluto em landscape muito baixo */
             display: flex;
             flex-direction: column;
             background-color: var(--black);
@@ -431,11 +435,6 @@
             padding: 10px 0;
         }
 
-        /* Respiro entre borda superior da página e o header */
-        .site-header {
-            padding-top: clamp(6px, 1vh, 12px);
-        }
-
         .header-row-1 .header-container {
             justify-content: flex-end;
             gap: 10px;
@@ -514,16 +513,24 @@
         }
 
         /* Logo swap: text visible by default, image hidden */
-        .nav-logo-text { display: block; }
-        .nav-logo-img  {
+        .nav-logo-text {
+            display: block;
+        }
+
+        .nav-logo-img {
             display: none;
             height: 52px;
             width: auto;
         }
 
         /* When hamburger is open, swap text → image */
-        .site-header.menu-open .nav-logo-text { display: none; }
-        .site-header.menu-open .nav-logo-img  { display: block; }
+        .site-header.menu-open .nav-logo-text {
+            display: none;
+        }
+
+        .site-header.menu-open .nav-logo-img {
+            display: block;
+        }
 
         /* Fix 5: hamburger dark in apresentação */
         body[data-mode="apresentacao"] .hamburger span {
@@ -935,10 +942,8 @@
             flex: 1;
             display: flex;
             flex-direction: column;
-            /* Espaço entre conteúdo e toggle-wrap:
-               proporcional à altura disponível, sem gerar vazio excessivo.
-               640px → ~22px  |  900px → ~36px  |  1080px → ~43px */
-            padding-bottom: clamp(16px, 4vh, 48px);
+            padding-bottom: 64px;
+            /* lifts toggle upward */
         }
 
         /* ─── PANELS ─────────────────────────────── */
@@ -1283,9 +1288,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            /* Respiro proporcional à altura: afasta hero-scroll da borda inferior
-               640px → top ~14px, bottom ~18px  |  1080px → top ~22px, bottom ~28px */
-            padding: clamp(12px, 2.2vh, 24px) 0 clamp(16px, 2.8vh, 32px);
+            padding: 16px 0 22px;
             opacity: 0;
             transition: opacity 0.6s ease;
         }
@@ -1445,6 +1448,7 @@
                 opacity: 1;
             }
         }
+
         /* ═══════════════════════════════════════════
            RESPONSIVE
            Ordem de cascata:
@@ -1455,33 +1459,99 @@
 
         /* 950px — sticky hamburger */
         @media (max-width: 950px) {
-            .sticky-links     { display: none; }
-            .sticky-logins    { display: none; }
-            .sticky-hamburger { display: flex; }
+            .sticky-links {
+                display: none;
+            }
+
+            .sticky-logins {
+                display: none;
+            }
+
+            .sticky-hamburger {
+                display: flex;
+            }
         }
 
         /* 800px — hero hamburger aparece */
         @media (max-width: 800px) {
-            .header-nav { display: none; }
-            .hamburger  { display: flex; }
+            .header-nav {
+                display: none;
+            }
+
+            .hamburger {
+                display: flex;
+            }
         }
 
-        /* ── 769px–1024px: tablet (portrait e landscape) + laptop 1024×640 ── */
+        /* ── 769px–1024px: tablet (portrait e landscape) + laptop 1024×640 ──
+           Layout ainda horizontal (logo + separador + texto lado a lado).
+           Problema anterior: clamp com vw baixo deixava tudo minúsculo.
+           Solução: valores mínimos generosos + coeficientes vw maiores.
+        ── */
         @media (min-width: 769px) and (max-width: 1024px) {
-            .hero-logo { width: clamp(200px, 22vw, 260px); }
-            .inicio-content { gap: clamp(28px, 3.5vw, 48px); }
-            .hero-separator { height: 90px; }
-            .inicio-label-top    { font-size: clamp(28px, 3.8vw, 44px); }
-            .inicio-label-bottom { font-size: clamp(16px, 2.2vw, 26px); }
-            .apres-line-sm { font-size: clamp(32px, 4.5vw, 52px); }
-            .apres-line-lg { font-size: clamp(72px, 11vw, 120px); }
-            .apres-line-md { font-size: clamp(32px, 4.5vw, 52px); }
-            .apres-body    { font-size: 17px; max-width: 560px; }
-            .apres-content { gap: 20px; }
-            .hero-toggle { padding: 16px 0 0; }
+
+            /* Logo: mínimo 200px garante presença visual em tablet portrait */
+            .hero-logo {
+                width: clamp(200px, 22vw, 260px);
+            }
+
+            .inicio-content {
+                gap: clamp(28px, 3.5vw, 48px);
+            }
+
+            .hero-separator {
+                height: 90px;
+            }
+
+            /* Tipografia: mínimos mais altos para não ficar minúsculo */
+            .inicio-label-top {
+                font-size: clamp(28px, 3.8vw, 44px);
+            }
+
+            .inicio-label-bottom {
+                font-size: clamp(16px, 2.2vw, 26px);
+            }
+
+            /* Apresentação: apres-title precisa de presença visual */
+            .apres-line-sm {
+                font-size: clamp(32px, 4.5vw, 52px);
+            }
+
+            .apres-line-lg {
+                font-size: clamp(72px, 11vw, 120px);
+            }
+
+            .apres-line-md {
+                font-size: clamp(32px, 4.5vw, 52px);
+            }
+
+            .apres-body {
+                font-size: 17px;
+                max-width: 560px;
+            }
+
+            .apres-content {
+                gap: 20px;
+            }
+
+            .hero-main {
+                padding-bottom: 40px;
+            }
+
+            .hero-toggle {
+                padding: 16px 0 0;
+            }
+
+            .hero-bottom {
+                padding: 12px 0 18px;
+            }
         }
 
-        /* ── ≤ 768px: mobile portrait — layout empilhado ── */
+        /* ── ≤ 768px: mobile portrait — layout empilhado ──
+           vw aqui vale ~390px em média.
+           Problema anterior: valores mínimos do clamp eram o teto real.
+           Solução: usar vw com coeficientes altos + mínimos generosos.
+        ── */
         @media (max-width: 768px) {
             .inicio-content {
                 flex-direction: column;
@@ -1489,61 +1559,205 @@
                 text-align: center;
                 gap: 16px;
             }
-            .hero-logo { width: clamp(180px, 50vw, 240px); }
+
+            /* Logo: 50vw em 390px = 195px — presença visual forte */
+            .hero-logo {
+                width: clamp(180px, 50vw, 240px);
+            }
+
+            /* Logo glow reduzido no mobile */
             .hero-logo-outer.logo-floating .hero-logo,
             .hero-logo {
-                filter: drop-shadow(0 0 24px rgba(244,160,0,0.35))
-                        drop-shadow(0 0 8px rgba(244,160,0,0.18));
+                filter: drop-shadow(0 0 24px rgba(244, 160, 0, 0.35)) drop-shadow(0 0 8px rgba(244, 160, 0, 0.18));
             }
+
+            /* Separador vira horizontal */
             .hero-separator {
                 width: 60px;
                 height: 1px !important;
-                background: linear-gradient(to right, transparent, rgba(244,160,0,0.45), transparent) !important;
+                background: linear-gradient(to right, transparent, rgba(244, 160, 0, 0.45), transparent) !important;
             }
-            .inicio-text { align-items: center; }
-            .inicio-label-top    { font-size: clamp(26px, 8vw, 42px); }
-            .inicio-label-bottom { font-size: clamp(14px, 4.5vw, 22px); }
-            .apres-line-sm { font-size: clamp(24px, 7vw, 36px); }
-            .apres-line-lg { font-size: clamp(64px, 20vw, 96px); }
-            .apres-line-md { font-size: clamp(24px, 7vw, 36px); }
-            .apres-body    { font-size: 15px; max-width: 320px; line-height: 1.6; }
-            .apres-content { gap: 18px; }
-            .hero-toggle { padding: 14px 0 0; }
-            .geo-ring-1 { display: none; }
-            .geo-ring-5 { display: none; }
-            .geo-ring-2 { width: 280px; height: 280px; margin-top: -140px; left: -80px; }
-            .geo-ring-3 { width: 140px; height: 140px; right: 10px; top: -40px; }
+
+            .inicio-text {
+                align-items: center;
+            }
+
+            /* Tipografia: coeficientes vw altos para portrait */
+            .inicio-label-top {
+                font-size: clamp(26px, 8vw, 42px);
+            }
+
+            .inicio-label-bottom {
+                font-size: clamp(14px, 4.5vw, 22px);
+            }
+
+            /* Apresentação: apres-line-lg é a peça principal — precisa impactar */
+            .apres-line-sm {
+                font-size: clamp(24px, 7vw, 36px);
+            }
+
+            .apres-line-lg {
+                font-size: clamp(64px, 20vw, 96px);
+            }
+
+            .apres-line-md {
+                font-size: clamp(24px, 7vw, 36px);
+            }
+
+            .apres-body {
+                font-size: 15px;
+                max-width: 320px;
+                line-height: 1.6;
+            }
+
+            .apres-content {
+                gap: 18px;
+            }
+
+            .hero-main {
+                padding-bottom: 32px;
+            }
+
+            .hero-toggle {
+                padding: 14px 0 0;
+            }
+
+            .hero-bottom {
+                padding: 10px 0 14px;
+            }
+
+            /* Geo simplificado */
+            .geo-ring-1 {
+                display: none;
+            }
+
+            .geo-ring-5 {
+                display: none;
+            }
+
+            .geo-ring-2 {
+                width: 280px;
+                height: 280px;
+                margin-top: -140px;
+                left: -80px;
+            }
+
+            .geo-ring-3 {
+                width: 140px;
+                height: 140px;
+                right: 10px;
+                top: -40px;
+            }
         }
 
         /* ── ≤ 550px: logins entram no hamburger ── */
         @media (max-width: 550px) {
-            .header-row-1  { display: none; }
-            .mobile-logins { display: flex; }
-            .hero-logo { width: clamp(160px, 46vw, 210px); }
-            .inicio-content { gap: 14px; }
+            .header-row-1 {
+                display: none;
+            }
 
-            .inicio-label-top    { font-size: clamp(22px, 7.5vw, 34px); }
-            .inicio-label-bottom { font-size: clamp(12px, 4vw, 18px); }
+            .mobile-logins {
+                display: flex;
+            }
 
-            .apres-line-sm { font-size: clamp(20px, 6.5vw, 30px); }
-            .apres-line-lg { font-size: clamp(56px, 18vw, 80px); }
-            .apres-line-md { font-size: clamp(20px, 6.5vw, 30px); }
-            .apres-body    { font-size: 13px; max-width: 280px; }
-            .apres-content { gap: 14px; }
-            .hero-toggle { padding: 10px 0 0; }
+            /* Logo e texto: mínimos ainda generosos em telas pequenas */
+            .hero-logo {
+                width: clamp(160px, 46vw, 210px);
+            }
+
+            .inicio-content {
+                gap: 14px;
+            }
+
+            .inicio-label-top {
+                font-size: clamp(22px, 7.5vw, 34px);
+            }
+
+            .inicio-label-bottom {
+                font-size: clamp(12px, 4vw, 18px);
+            }
+
+            .apres-line-sm {
+                font-size: clamp(20px, 6.5vw, 30px);
+            }
+
+            .apres-line-lg {
+                font-size: clamp(56px, 18vw, 80px);
+            }
+
+            .apres-line-md {
+                font-size: clamp(20px, 6.5vw, 30px);
+            }
+
+            .apres-body {
+                font-size: 13px;
+                max-width: 280px;
+            }
+
+            .apres-content {
+                gap: 14px;
+            }
+
+            .hero-main {
+                padding-bottom: 20px;
+            }
+
+            .hero-toggle {
+                padding: 10px 0 0;
+            }
+
+            .hero-bottom {
+                padding: 8px 0 10px;
+            }
         }
 
         /* ── ≤ 320px: piso seguro (Galaxy Fold fechado, telas mínimas) ── */
         @media (max-width: 320px) {
-            .hero-logo { width: clamp(120px, 44vw, 160px); }
-            .inicio-label-top    { font-size: 18px; letter-spacing: 2px; }
-            .inicio-label-bottom { font-size: 11px; letter-spacing: 2px; }
-            .apres-line-sm { font-size: 18px; }
-            .apres-line-lg { font-size: 46px; }
-            .apres-line-md { font-size: 18px; }
-            .inicio-content { gap: 10px; }
-            .apres-content  { gap: 10px; }
-            .hero-toggle { padding: 6px 0 0; }
+            .hero-logo {
+                width: clamp(120px, 44vw, 160px);
+            }
+
+            .inicio-label-top {
+                font-size: 18px;
+                letter-spacing: 2px;
+            }
+
+            .inicio-label-bottom {
+                font-size: 11px;
+                letter-spacing: 2px;
+            }
+
+            .apres-line-sm {
+                font-size: 18px;
+            }
+
+            .apres-line-lg {
+                font-size: 46px;
+            }
+
+            .apres-line-md {
+                font-size: 18px;
+            }
+
+            .inicio-content {
+                gap: 10px;
+            }
+
+            .apres-content {
+                gap: 10px;
+            }
+
+            .hero-main {
+                padding-bottom: 14px;
+            }
+
+            .hero-toggle {
+                padding: 6px 0 0;
+            }
+
+            .hero-bottom {
+                padding: 6px 0 8px;
+            }
         }
 
         /* ══════════════════════════════════════════════
@@ -1561,28 +1775,78 @@
            Reduz sem eliminar elementos.
         ── */
         @media (max-height: 700px) {
-            .header-row-1  { padding: 5px 0; }
-            .header-row-2  { padding: 6px 0; }
-            .header-logo-img { height: 52px; }
+            .header-row-1 {
+                padding: 5px 0;
+            }
+
+            .header-row-2 {
+                padding: 6px 0;
+            }
+
+            .header-logo-img {
+                height: 52px;
+            }
 
             /* Logo: vh garante proporção à altura disponível */
-            .hero-logo { width: clamp(100px, 16vh, 180px); }
+            .hero-logo {
+                width: clamp(100px, 16vh, 180px);
+            }
 
-            .hero-separator { height: 60px; }
-            .inicio-content { gap: clamp(12px, 2.5vw, 28px); }
+            .hero-separator {
+                height: 60px;
+            }
 
-            .inicio-label-top    { font-size: clamp(16px, 4.5vh, 28px); }
-            .inicio-label-bottom { font-size: clamp(11px, 2.8vh, 18px); }
+            .inicio-content {
+                gap: clamp(12px, 2.5vw, 28px);
+            }
 
-            .apres-line-sm { font-size: clamp(18px, 4.5vh, 30px); }
-            .apres-line-lg { font-size: clamp(40px, 11vh, 68px); }
-            .apres-line-md { font-size: clamp(18px, 4.5vh, 30px); }
-            .apres-body    { font-size: 12px; }
-            .apres-content { gap: 10px; }
+            .inicio-label-top {
+                font-size: clamp(16px, 4.5vh, 28px);
+            }
 
-            .hero-toggle { padding: 8px 0 0; }
-            .scroll-label { font-size: 10px; }
-            .scroll-arrow { font-size: 20px; }
+            .inicio-label-bottom {
+                font-size: clamp(11px, 2.8vh, 18px);
+            }
+
+            .apres-line-sm {
+                font-size: clamp(18px, 4.5vh, 30px);
+            }
+
+            .apres-line-lg {
+                font-size: clamp(40px, 11vh, 68px);
+            }
+
+            .apres-line-md {
+                font-size: clamp(18px, 4.5vh, 30px);
+            }
+
+            .apres-body {
+                font-size: 12px;
+            }
+
+            .apres-content {
+                gap: 10px;
+            }
+
+            .hero-main {
+                padding-bottom: 10px;
+            }
+
+            .hero-bottom {
+                padding: 5px 0 7px;
+            }
+
+            .hero-toggle {
+                padding: 5px 0 0;
+            }
+
+            .scroll-label {
+                font-size: 10px;
+            }
+
+            .scroll-arrow {
+                font-size: 20px;
+            }
         }
 
         /* ── Landscape crítico: 391px–500px de altura ──
@@ -1591,6 +1855,7 @@
            O separador vira horizontal para caber na linha.
         ── */
         @media (max-height: 500px) {
+
             /* Força layout horizontal mesmo em larguras ≤ 768px */
             .inicio-content {
                 flex-direction: row !important;
@@ -1598,33 +1863,83 @@
                 text-align: left;
                 gap: clamp(12px, 3vw, 24px);
             }
-            .inicio-text { align-items: flex-start; }
+
+            .inicio-text {
+                align-items: flex-start;
+            }
 
             /* Separador volta a ser vertical */
             .hero-separator {
                 width: 1px !important;
                 height: 60px !important;
-                background: linear-gradient(to bottom, transparent, rgba(244,160,0,0.45), transparent) !important;
+                background: linear-gradient(to bottom, transparent, rgba(244, 160, 0, 0.45), transparent) !important;
             }
 
-            .header-row-1  { display: none; }
-            .mobile-logins { display: flex; }
-            .header-logo-img { height: 38px; }
-            .header-row-2  { padding: 4px 0; }
+            .header-row-1 {
+                display: none;
+            }
 
-            .hero-logo { width: clamp(70px, 14vh, 110px); }
+            .mobile-logins {
+                display: flex;
+            }
 
-            .inicio-label-top    { font-size: clamp(14px, 3.8vh, 22px); letter-spacing: 2px; }
-            .inicio-label-bottom { font-size: clamp(10px, 2.4vh, 14px); letter-spacing: 1px; }
+            .header-logo-img {
+                height: 38px;
+            }
 
-            .apres-line-sm { font-size: clamp(14px, 3.8vh, 20px); }
-            .apres-line-lg { font-size: clamp(30px, 9vh, 52px); }
-            .apres-line-md { font-size: clamp(14px, 3.8vh, 20px); }
-            .apres-body    { display: none; }
-            .apres-content { gap: 6px; }
+            .header-row-2 {
+                padding: 4px 0;
+            }
 
-            .hero-toggle { padding: 4px 0 0; }
-            .scroll-label { display: none; }
+            .hero-logo {
+                width: clamp(70px, 14vh, 110px);
+            }
+
+            .inicio-label-top {
+                font-size: clamp(14px, 3.8vh, 22px);
+                letter-spacing: 2px;
+            }
+
+            .inicio-label-bottom {
+                font-size: clamp(10px, 2.4vh, 14px);
+                letter-spacing: 1px;
+            }
+
+            .apres-line-sm {
+                font-size: clamp(14px, 3.8vh, 20px);
+            }
+
+            .apres-line-lg {
+                font-size: clamp(30px, 9vh, 52px);
+            }
+
+            .apres-line-md {
+                font-size: clamp(14px, 3.8vh, 20px);
+            }
+
+            .apres-body {
+                display: none;
+            }
+
+            .apres-content {
+                gap: 6px;
+            }
+
+            .hero-main {
+                padding-bottom: 6px;
+            }
+
+            .hero-bottom {
+                padding: 3px 0 5px;
+            }
+
+            .hero-toggle {
+                padding: 4px 0 0;
+            }
+
+            .scroll-label {
+                display: none;
+            }
         }
 
         /* ── Landscape extremo: ≤ 390px de altura ──
@@ -1632,30 +1947,78 @@
            Máxima compressão. Scroll hint some.
         ── */
         @media (max-height: 390px) {
-            .hero-logo { width: clamp(56px, 13vh, 88px); }
-            .header-row-2 { padding: 3px 0; }
+            .hero-logo {
+                width: clamp(56px, 13vh, 88px);
+            }
 
-            .inicio-label-top    { font-size: clamp(12px, 3.2vh, 18px); letter-spacing: 1px; }
-            .inicio-label-bottom { font-size: clamp(9px, 2vh, 12px); letter-spacing: 1px; }
+            .header-row-2 {
+                padding: 3px 0;
+            }
 
-            .hero-separator { height: 44px !important; }
+            .inicio-label-top {
+                font-size: clamp(12px, 3.2vh, 18px);
+                letter-spacing: 1px;
+            }
 
-            .apres-line-lg { font-size: clamp(24px, 7.5vh, 42px); }
-            .apres-content { gap: 4px; }
-            .hero-toggle   { padding: 3px 0 0; }
-            .hero-bottom   { display: none; }
+            .inicio-label-bottom {
+                font-size: clamp(9px, 2vh, 12px);
+                letter-spacing: 1px;
+            }
+
+            .hero-separator {
+                height: 44px !important;
+            }
+
+            .apres-line-lg {
+                font-size: clamp(24px, 7.5vh, 42px);
+            }
+
+            .apres-content {
+                gap: 4px;
+            }
+
+            .hero-main {
+                padding-bottom: 4px;
+            }
+
+            .hero-bottom {
+                display: none;
+            }
+
+            .hero-toggle {
+                padding: 3px 0 0;
+            }
         }
 
         /* ── prefers-reduced-motion ── */
         @media (prefers-reduced-motion: reduce) {
-            .geo-ring-1, .geo-ring-2, .geo-ring-3,
-            .geo-ring-4, .geo-ring-5,
-            .geo-sq-1, .geo-sq-2, .geo-sq-3 { animation: none; }
-            .geo-dot-1, .geo-dot-2, .geo-dot-3 { animation: none; opacity: 0.3; }
-            .hero-logo-outer.logo-floating     { animation: none; }
-            .scroll-arrow                      { animation: none; }
-        }
 
+            .geo-ring-1,
+            .geo-ring-2,
+            .geo-ring-3,
+            .geo-ring-4,
+            .geo-ring-5,
+            .geo-sq-1,
+            .geo-sq-2,
+            .geo-sq-3 {
+                animation: none;
+            }
+
+            .geo-dot-1,
+            .geo-dot-2,
+            .geo-dot-3 {
+                animation: none;
+                opacity: 0.3;
+            }
+
+            .hero-logo-outer.logo-floating {
+                animation: none;
+            }
+
+            .scroll-arrow {
+                animation: none;
+            }
+        }
     </style>
 </head>
 
@@ -1686,54 +2049,54 @@
         <!-- Background clip: canvas + geo confined here, doesn't clip mobile-nav -->
         <div class="hero-bg-clip">
 
-        <!-- z1: Confetti -->
-        <canvas id="confetti-canvas"></canvas>
+            <!-- z1: Confetti -->
+            <canvas id="confetti-canvas"></canvas>
 
-        <!-- z2: Geometric layer -->
-        <div class="geo-layer">
-            <div class="geo-px" data-depth="0.15">
-                <div class="geo-ring-1"></div>
-            </div>
-            <div class="geo-px" data-depth="0.25">
-                <div class="geo-ring-2"></div>
-            </div>
-            <div class="geo-px" data-depth="0.35">
-                <div class="geo-ring-3"></div>
-            </div>
-            <div class="geo-px" data-depth="0.55">
-                <div class="geo-ring-4"></div>
-            </div>
-            <div class="geo-px" data-depth="0.12">
-                <div class="geo-ring-5"></div>
-            </div>
-            <div class="geo-px" data-depth="0.45">
-                <div class="geo-sq-1"></div>
-            </div>
-            <div class="geo-px" data-depth="0.60">
-                <div class="geo-sq-2"></div>
-            </div>
-            <div class="geo-px" data-depth="0.50">
-                <div class="geo-sq-3"></div>
-            </div>
-            <div class="geo-px" data-depth="0.40">
-                <div class="geo-dot geo-dot-1"></div>
-            </div>
-            <div class="geo-px" data-depth="0.40">
-                <div class="geo-dot geo-dot-2"></div>
-            </div>
-            <div class="geo-px" data-depth="0.40">
-                <div class="geo-dot geo-dot-3"></div>
-            </div>
-            <svg class="geo-svg" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice" fill="none">
-                <line x1="820" y1="900" x2="1440" y2="240" style="stroke:var(--gs-a); stroke-width:1" />
-                <line x1="900" y1="900" x2="1440" y2="360" style="stroke:var(--gs-b); stroke-width:1" />
-                <line x1="0" y1="200" x2="340" y2="0" style="stroke:var(--gs-b); stroke-width:1" />
-                <line x1="1080" y1="460" x2="1140" y2="460" style="stroke:var(--gs-c); stroke-width:1" />
-                <line x1="1090" y1="472" x2="1130" y2="472" style="stroke:var(--gs-b); stroke-width:1" />
-                <line x1="680" y1="128" x2="680" y2="158" style="stroke:var(--gs-d); stroke-width:1.5" />
-                <line x1="665" y1="143" x2="695" y2="143" style="stroke:var(--gs-d); stroke-width:1.5" />
-            </svg>
-        </div><!-- /.geo-layer -->
+            <!-- z2: Geometric layer -->
+            <div class="geo-layer">
+                <div class="geo-px" data-depth="0.15">
+                    <div class="geo-ring-1"></div>
+                </div>
+                <div class="geo-px" data-depth="0.25">
+                    <div class="geo-ring-2"></div>
+                </div>
+                <div class="geo-px" data-depth="0.35">
+                    <div class="geo-ring-3"></div>
+                </div>
+                <div class="geo-px" data-depth="0.55">
+                    <div class="geo-ring-4"></div>
+                </div>
+                <div class="geo-px" data-depth="0.12">
+                    <div class="geo-ring-5"></div>
+                </div>
+                <div class="geo-px" data-depth="0.45">
+                    <div class="geo-sq-1"></div>
+                </div>
+                <div class="geo-px" data-depth="0.60">
+                    <div class="geo-sq-2"></div>
+                </div>
+                <div class="geo-px" data-depth="0.50">
+                    <div class="geo-sq-3"></div>
+                </div>
+                <div class="geo-px" data-depth="0.40">
+                    <div class="geo-dot geo-dot-1"></div>
+                </div>
+                <div class="geo-px" data-depth="0.40">
+                    <div class="geo-dot geo-dot-2"></div>
+                </div>
+                <div class="geo-px" data-depth="0.40">
+                    <div class="geo-dot geo-dot-3"></div>
+                </div>
+                <svg class="geo-svg" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice" fill="none">
+                    <line x1="820" y1="900" x2="1440" y2="240" style="stroke:var(--gs-a); stroke-width:1" />
+                    <line x1="900" y1="900" x2="1440" y2="360" style="stroke:var(--gs-b); stroke-width:1" />
+                    <line x1="0" y1="200" x2="340" y2="0" style="stroke:var(--gs-b); stroke-width:1" />
+                    <line x1="1080" y1="460" x2="1140" y2="460" style="stroke:var(--gs-c); stroke-width:1" />
+                    <line x1="1090" y1="472" x2="1130" y2="472" style="stroke:var(--gs-b); stroke-width:1" />
+                    <line x1="680" y1="128" x2="680" y2="158" style="stroke:var(--gs-d); stroke-width:1.5" />
+                    <line x1="665" y1="143" x2="695" y2="143" style="stroke:var(--gs-d); stroke-width:1.5" />
+                </svg>
+            </div><!-- /.geo-layer -->
         </div><!-- /.hero-bg-clip -->
 
         <!-- Geo layer above -->
@@ -1751,8 +2114,8 @@
                     <a href="#" class="nav-logo">
                         <span class="nav-logo-text">NYR FESTAS</span>
                         <img class="nav-logo-img"
-                             src="https://res.cloudinary.com/dbcz5yhgs/image/upload/v1772106248/LOGO_NYR_ufn70y.png"
-                             alt="Nyr Festas">
+                            src="https://res.cloudinary.com/dbcz5yhgs/image/upload/v1772106248/LOGO_NYR_ufn70y.png"
+                            alt="Nyr Festas">
                     </a>
                     <nav>
                         <ul class="header-nav">
