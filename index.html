@@ -54,8 +54,10 @@
             position: relative;
             width: 100%;
             height: 100vh;
-            height: 100svh; /* iOS Safari: exclui barra de endereço */
-            min-height: 100svh; /* garante que nunca ultrapasse a viewport */
+            height: 100svh;
+            /* iOS Safari: exclui barra de endereço */
+            min-height: 100svh;
+            /* garante que nunca ultrapasse a viewport */
             display: flex;
             flex-direction: column;
             background-color: var(--black);
@@ -513,16 +515,33 @@
         }
 
         /* Logo swap: text visible by default, image hidden */
-        .nav-logo-text { display: block; }
-        .nav-logo-img  {
+        .nav-logo-text {
+            display: block;
+        }
+
+        .nav-logo-img {
             display: none;
             height: 52px;
             width: auto;
         }
 
         /* When hamburger is open, swap text → image */
-        .site-header.menu-open .nav-logo-text { display: none; }
-        .site-header.menu-open .nav-logo-img  { display: block; }
+        .site-header.menu-open .nav-logo-text {
+            display: none;
+        }
+
+        .site-header.menu-open .nav-logo-img {
+            display: block;
+        }
+
+        /* height-menu-open: mesmo swap de logo */
+        .site-header.height-menu-open .nav-logo-text {
+            display: none;
+        }
+
+        .site-header.height-menu-open .nav-logo-img {
+            display: block;
+        }
 
         /* Fix 5: hamburger dark in apresentação */
         body[data-mode="apresentacao"] .hamburger span {
@@ -1447,6 +1466,108 @@
                 opacity: 1;
             }
         }
+
+        /* ─── HEIGHT-HAMBURGER + HEIGHT-NAV ─────────
+           Visível apenas em max-height:560px + min-width:600px.
+           Mesmo estilo do hamburger e mobile-nav existentes.
+           Contém links de navegação + btn-login.
+        ── */
+        .height-hamburger {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            background: transparent;
+            border: none;
+            padding: 6px;
+            cursor: pointer;
+            z-index: 200;
+            flex-shrink: 0;
+        }
+
+        .height-hamburger span {
+            display: block;
+            width: 24px;
+            height: 2px;
+            background: var(--white);
+            border-radius: 2px;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+        }
+
+        .height-hamburger.open span:nth-child(1) {
+            transform: translateY(7px) rotate(45deg);
+        }
+
+        .height-hamburger.open span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .height-hamburger.open span:nth-child(3) {
+            transform: translateY(-7px) rotate(-45deg);
+        }
+
+        body[data-mode="apresentacao"] .height-hamburger span {
+            background: var(--black);
+        }
+
+        .site-header.height-menu-open .height-hamburger span {
+            background: var(--black);
+        }
+
+        /* Dropdown — idêntico ao mobile-nav */
+        .height-nav {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: #fff;
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 2px solid var(--orange);
+            z-index: 500;
+            padding: 8px 0;
+        }
+
+        .height-nav.open {
+            display: block;
+        }
+
+        .height-nav ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .height-nav ul li a {
+            display: block;
+            font-family: 'Barlow Condensed', sans-serif;
+            font-size: 15px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: rgba(13, 13, 13, 0.8);
+            padding: 14px 24px;
+            text-decoration: none;
+            transition: color 0.32s ease, background 0.32s ease;
+        }
+
+        .height-nav ul li a:hover {
+            color: var(--orange);
+            background: rgba(244, 160, 0, 0.06);
+        }
+
+        .height-nav ul li a:hover {
+            color: var(--orange);
+            background: rgba(244, 160, 0, 0.06);
+        }
+
+        .height-nav-logins {
+            display: flex;
+            gap: 10px;
+            padding: 14px 24px;
+            border-top: 1px solid rgba(0, 0, 0, 0.07);
+            flex-wrap: wrap;
+        }
+
         /* ═══════════════════════════════════════════
            RESPONSIVE
            Ordem de cascata:
@@ -1457,30 +1578,77 @@
 
         /* 950px — sticky hamburger */
         @media (max-width: 950px) {
-            .sticky-links     { display: none; }
-            .sticky-logins    { display: none; }
-            .sticky-hamburger { display: flex; }
+            .sticky-links {
+                display: none;
+            }
+
+            .sticky-logins {
+                display: none;
+            }
+
+            .sticky-hamburger {
+                display: flex;
+            }
         }
 
         /* 800px — hero hamburger aparece */
         @media (max-width: 800px) {
-            .header-nav { display: none; }
-            .hamburger  { display: flex; }
+            .header-nav {
+                display: none;
+            }
+
+            .hamburger {
+                display: flex;
+            }
         }
 
         /* ── 769px–1024px: tablet (portrait e landscape) + laptop 1024×640 ── */
         @media (min-width: 769px) and (max-width: 1024px) {
-            .hero-logo { width: clamp(200px, 22vw, 260px); }
-            .inicio-content { gap: clamp(28px, 3.5vw, 48px); }
-            .hero-separator { height: 90px; }
-            .inicio-label-top    { font-size: clamp(28px, 3.8vw, 44px); }
-            .inicio-label-bottom { font-size: clamp(16px, 2.2vw, 26px); }
-            .apres-line-sm { font-size: clamp(38px, 5.2vw, 58px); }
-            .apres-line-lg { font-size: clamp(86px, 13vw, 138px); }
-            .apres-line-md { font-size: clamp(38px, 5.2vw, 58px); }
-            .apres-body    { font-size: 19px; max-width: 600px; line-height: 1.65; }
-            .apres-content { gap: 24px; }
-            .hero-toggle { padding: 16px 0 0; }
+            .hero-logo {
+                width: clamp(200px, 22vw, 260px);
+            }
+
+            .inicio-content {
+                gap: clamp(28px, 3.5vw, 48px);
+            }
+
+            .hero-separator {
+                height: 90px;
+            }
+
+            .inicio-label-top {
+                font-size: clamp(28px, 3.8vw, 44px);
+            }
+
+            .inicio-label-bottom {
+                font-size: clamp(16px, 2.2vw, 26px);
+            }
+
+            .apres-line-sm {
+                font-size: clamp(38px, 5.2vw, 58px);
+            }
+
+            .apres-line-lg {
+                font-size: clamp(86px, 13vw, 138px);
+            }
+
+            .apres-line-md {
+                font-size: clamp(38px, 5.2vw, 58px);
+            }
+
+            .apres-body {
+                font-size: 19px;
+                max-width: 600px;
+                line-height: 1.65;
+            }
+
+            .apres-content {
+                gap: 24px;
+            }
+
+            .hero-toggle {
+                padding: 16px 0 0;
+            }
         }
 
         /* ── ≤ 768px: mobile portrait — layout empilhado ── */
@@ -1491,61 +1659,175 @@
                 text-align: center;
                 gap: 16px;
             }
-            .hero-logo { width: clamp(180px, 50vw, 240px); }
+
+            .hero-logo {
+                width: clamp(180px, 50vw, 240px);
+            }
+
             .hero-logo-outer.logo-floating .hero-logo,
             .hero-logo {
-                filter: drop-shadow(0 0 24px rgba(244,160,0,0.35))
-                        drop-shadow(0 0 8px rgba(244,160,0,0.18));
+                filter: drop-shadow(0 0 24px rgba(244, 160, 0, 0.35)) drop-shadow(0 0 8px rgba(244, 160, 0, 0.18));
             }
+
             .hero-separator {
                 width: 60px;
                 height: 1px !important;
-                background: linear-gradient(to right, transparent, rgba(244,160,0,0.45), transparent) !important;
+                background: linear-gradient(to right, transparent, rgba(244, 160, 0, 0.45), transparent) !important;
             }
-            .inicio-text { align-items: center; }
-            .inicio-label-top    { font-size: clamp(26px, 8vw, 42px); }
-            .inicio-label-bottom { font-size: clamp(14px, 4.5vw, 22px); }
-            .apres-line-sm { font-size: clamp(30px, 9vw, 44px); }
-            .apres-line-lg { font-size: clamp(78px, 24vw, 116px); }
-            .apres-line-md { font-size: clamp(30px, 9vw, 44px); }
-            .apres-body    { font-size: 17px; max-width: 340px; line-height: 1.6; }
-            .apres-content { gap: 22px; }
-            .hero-toggle { padding: 14px 0 0; }
-            .geo-ring-1 { display: none; }
-            .geo-ring-5 { display: none; }
-            .geo-ring-2 { width: 280px; height: 280px; margin-top: -140px; left: -80px; }
-            .geo-ring-3 { width: 140px; height: 140px; right: 10px; top: -40px; }
+
+            .inicio-text {
+                align-items: center;
+            }
+
+            .inicio-label-top {
+                font-size: clamp(26px, 8vw, 42px);
+            }
+
+            .inicio-label-bottom {
+                font-size: clamp(14px, 4.5vw, 22px);
+            }
+
+            .apres-line-sm {
+                font-size: clamp(30px, 9vw, 44px);
+            }
+
+            .apres-line-lg {
+                font-size: clamp(78px, 24vw, 116px);
+            }
+
+            .apres-line-md {
+                font-size: clamp(30px, 9vw, 44px);
+            }
+
+            .apres-body {
+                font-size: 17px;
+                max-width: 340px;
+                line-height: 1.6;
+            }
+
+            .apres-content {
+                gap: 22px;
+            }
+
+            .hero-toggle {
+                padding: 14px 0 0;
+            }
+
+            .geo-ring-1 {
+                display: none;
+            }
+
+            .geo-ring-5 {
+                display: none;
+            }
+
+            .geo-ring-2 {
+                width: 280px;
+                height: 280px;
+                margin-top: -140px;
+                left: -80px;
+            }
+
+            .geo-ring-3 {
+                width: 140px;
+                height: 140px;
+                right: 10px;
+                top: -40px;
+            }
         }
 
         /* ── ≤ 550px: logins entram no hamburger ── */
         @media (max-width: 550px) {
-            .header-row-1  { display: none; }
-            .mobile-logins { display: flex; }
-            .hero-logo { width: clamp(160px, 46vw, 210px); }
-            .inicio-content { gap: 14px; }
+            .header-row-1 {
+                display: none;
+            }
 
-            .inicio-label-top    { font-size: clamp(22px, 7.5vw, 34px); }
-            .inicio-label-bottom { font-size: clamp(12px, 4vw, 18px); }
+            .mobile-logins {
+                display: flex;
+            }
 
-            .apres-line-sm { font-size: clamp(26px, 8vw, 36px); }
-            .apres-line-lg { font-size: clamp(68px, 21vw, 92px); }
-            .apres-line-md { font-size: clamp(26px, 8vw, 36px); }
-            .apres-body    { font-size: 15px; max-width: 300px; line-height: 1.6; }
-            .apres-content { gap: 18px; }
-            .hero-toggle { padding: 10px 0 0; }
+            .hero-logo {
+                width: clamp(160px, 46vw, 210px);
+            }
+
+            .inicio-content {
+                gap: 14px;
+            }
+
+            .inicio-label-top {
+                font-size: clamp(22px, 7.5vw, 34px);
+            }
+
+            .inicio-label-bottom {
+                font-size: clamp(12px, 4vw, 18px);
+            }
+
+            .apres-line-sm {
+                font-size: clamp(26px, 8vw, 36px);
+            }
+
+            .apres-line-lg {
+                font-size: clamp(68px, 21vw, 92px);
+            }
+
+            .apres-line-md {
+                font-size: clamp(26px, 8vw, 36px);
+            }
+
+            .apres-body {
+                font-size: 15px;
+                max-width: 300px;
+                line-height: 1.6;
+            }
+
+            .apres-content {
+                gap: 18px;
+            }
+
+            .hero-toggle {
+                padding: 10px 0 0;
+            }
         }
 
         /* ── ≤ 320px: piso seguro (Galaxy Fold fechado, telas mínimas) ── */
         @media (max-width: 320px) {
-            .hero-logo { width: clamp(120px, 44vw, 160px); }
-            .inicio-label-top    { font-size: 18px; letter-spacing: 2px; }
-            .inicio-label-bottom { font-size: 11px; letter-spacing: 2px; }
-            .apres-line-sm { font-size: 18px; }
-            .apres-line-lg { font-size: 46px; }
-            .apres-line-md { font-size: 18px; }
-            .inicio-content { gap: 10px; }
-            .apres-content  { gap: 10px; }
-            .hero-toggle { padding: 6px 0 0; }
+            .hero-logo {
+                width: clamp(120px, 44vw, 160px);
+            }
+
+            .inicio-label-top {
+                font-size: 18px;
+                letter-spacing: 2px;
+            }
+
+            .inicio-label-bottom {
+                font-size: 11px;
+                letter-spacing: 2px;
+            }
+
+            .apres-line-sm {
+                font-size: 18px;
+            }
+
+            .apres-line-lg {
+                font-size: 46px;
+            }
+
+            .apres-line-md {
+                font-size: 18px;
+            }
+
+            .inicio-content {
+                gap: 10px;
+            }
+
+            .apres-content {
+                gap: 10px;
+            }
+
+            .hero-toggle {
+                padding: 6px 0 0;
+            }
         }
 
         /* ══════════════════════════════════════════════
@@ -1563,97 +1845,230 @@
            Reduz sem eliminar elementos.
         ── */
         @media (max-height: 700px) {
+
             /* Apenas compacta o header e espaçamentos — não reduz fontes.
                A solução para altura reduzida é o clamp no hero-main e
                hero-bottom, não diminuir elementos. */
-            .header-row-1    { padding: 4px 0; }
-            .header-row-2    { padding: 6px 0; }
-            .header-logo-img { height: 50px; }
-            .site-header     { padding-top: 2px; }
-            .hero-separator  { height: 70px; }
-            .scroll-label    { font-size: 11px; }
-            .scroll-arrow    { font-size: 22px; }
+            .header-row-1 {
+                padding: 4px 0;
+            }
+
+            .header-row-2 {
+                padding: 6px 0;
+            }
+
+            .header-logo-img {
+                height: 50px;
+            }
+
+            .site-header {
+                padding-top: 2px;
+            }
+
+            .hero-separator {
+                height: 70px;
+            }
+
+            .scroll-label {
+                font-size: 11px;
+            }
+
+            .scroll-arrow {
+                font-size: 22px;
+            }
         }
 
 
 
-        /* ── Tablet landscape crítico: altura 391px–560px, largura ≥ 600px ──
-           Cobre tablets deitados com altura real reduzida pela barra do browser.
-           Celulares landscape (largura < 600px) herdam o layout portrait — sem
-           regras específicas para essa situação de nicho.
-           O threshold em 560px (não 500px) compensa os ~50-60px da barra do
-           browser que o DevTools não simula mas o dispositivo físico desconta.
+        /* ── Tablet landscape crítico: altura ≤560px, largura ≥600px ──
+           Cobre tablets grandes deitados cuja altura real (descontada a barra
+           do browser) fica abaixo de 560px — ex: ~530px num tablet de 620px
+           de largura em portrait, deitado.
+           height-hamburger assume o controle: contém links + logins.
+           Elementos calibrados para tablet grande, não para celular.
         ── */
         @media (max-height: 560px) and (min-width: 600px) {
-            /* Header compacto */
-            .header-row-1    { display: none; }
-            .mobile-logins   { display: flex; }
-            .header-logo-img { height: 40px; }
-            .header-row-2    { padding: 5px 0; }
-            .site-header     { padding-top: 4px; }
 
-            /* Layout horizontal para aproveitar largura disponível */
+            /* Header: esconde row-1 (logins) e header-nav (links) */
+            .header-row-1 {
+                display: none;
+            }
+
+            .header-nav {
+                display: none;
+            }
+
+            /* Esconde hamburger hero (só aparece em max-width:800px) */
+            .hamburger {
+                display: none;
+            }
+
+            /* Ativa height-hamburger — o único botão de menu nesse contexto */
+            .height-hamburger {
+                display: flex;
+            }
+
+            /* Compacta header-row-2 */
+            .header-logo-img {
+                height: 42px;
+            }
+
+            .header-row-2 {
+                padding: 5px 0;
+            }
+
+            .site-header {
+                padding-top: 4px;
+            }
+
+            /* Layout horizontal — aproveita largura disponível */
             .inicio-content {
                 flex-direction: row;
                 align-items: center;
                 text-align: left;
-                gap: clamp(16px, 3vw, 32px);
+                gap: clamp(20px, 3.5vw, 40px);
             }
-            .inicio-text { align-items: flex-start; }
+
+            .inicio-text {
+                align-items: flex-start;
+            }
 
             /* Separador vertical */
             .hero-separator {
                 width: 1px !important;
-                height: clamp(50px, 9vh, 80px) !important;
-                background: linear-gradient(to bottom, transparent, rgba(244,160,0,0.45), transparent) !important;
+                height: clamp(60px, 11vh, 90px) !important;
+                background: linear-gradient(to bottom, transparent, rgba(244, 160, 0, 0.45), transparent) !important;
             }
 
-            /* Logo proporcional à altura */
-            .hero-logo { width: clamp(80px, 16vh, 130px); }
+            /* Logo: vw como dominante — tablet landscape tem largura generosa */
+            .hero-logo {
+                width: clamp(130px, 16vw, 200px);
+            }
 
-            /* Início: texto em escala de altura */
-            .inicio-label-top    { font-size: clamp(18px, 5vh, 30px); letter-spacing: 3px; }
-            .inicio-label-bottom { font-size: clamp(12px, 3vh, 18px); letter-spacing: 2px; }
+            /* Início: vw para aproveitar a largura disponível */
+            .inicio-label-top {
+                font-size: clamp(28px, 4vw, 48px);
+                letter-spacing: 4px;
+            }
 
-            /* Apresentação: tamanhos dignos para tablet — não minúsculos */
-            .apres-line-sm { font-size: clamp(20px, 5vh, 30px); }
-            .apres-line-lg { font-size: clamp(44px, 12vh, 72px); }
-            .apres-line-md { font-size: clamp(20px, 5vh, 30px); }
-            .apres-body    { font-size: 14px; max-width: 480px; line-height: 1.5; }
-            .apres-content { gap: 10px; }
+            .inicio-label-bottom {
+                font-size: clamp(16px, 2.4vw, 30px);
+                letter-spacing: 3px;
+            }
 
-            /* Espaçamentos comprimidos */
-            .hero-toggle  { padding: 6px 0 0; }
-            .scroll-label { display: none; }
-            .scroll-arrow { font-size: 20px; }
+            /* Apresentação: presença visual real para tablet grande */
+            .apres-line-sm {
+                font-size: clamp(28px, 3.8vw, 48px);
+            }
+
+            .apres-line-lg {
+                font-size: clamp(64px, 10vw, 120px);
+            }
+
+            .apres-line-md {
+                font-size: clamp(28px, 3.8vw, 48px);
+            }
+
+            .apres-body {
+                font-size: 16px;
+                max-width: 560px;
+                line-height: 1.55;
+            }
+
+            .apres-content {
+                gap: 14px;
+            }
+
+            /* Toggle e scroll hint */
+            .hero-toggle {
+                padding: 8px 0 0;
+            }
+
+            .scroll-label {
+                font-size: 11px;
+            }
+
+            .scroll-arrow {
+                font-size: 20px;
+            }
         }
 
         /* ── Tablet landscape extremo: ≤ 390px de altura, largura ≥ 600px ──
            Tablets muito comprimidos ou com barra enorme. Compressão máxima.
         ── */
         @media (max-height: 390px) and (min-width: 600px) {
-            .hero-logo    { width: clamp(60px, 13vh, 90px); }
-            .header-row-2 { padding: 3px 0; }
-            .inicio-label-top    { font-size: clamp(14px, 3.8vh, 20px); letter-spacing: 1px; }
-            .inicio-label-bottom { font-size: clamp(10px, 2.4vh, 14px); letter-spacing: 1px; }
-            .hero-separator { height: 44px !important; }
-            .apres-line-lg  { font-size: clamp(34px, 10vh, 52px); }
-            .apres-body     { display: none; }
-            .apres-content  { gap: 5px; }
-            .hero-toggle    { padding: 3px 0 0; }
-            .hero-bottom    { display: none; }
+            .hero-logo {
+                width: clamp(60px, 13vh, 90px);
+            }
+
+            .header-row-2 {
+                padding: 3px 0;
+            }
+
+            .inicio-label-top {
+                font-size: clamp(14px, 3.8vh, 20px);
+                letter-spacing: 1px;
+            }
+
+            .inicio-label-bottom {
+                font-size: clamp(10px, 2.4vh, 14px);
+                letter-spacing: 1px;
+            }
+
+            .hero-separator {
+                height: 44px !important;
+            }
+
+            .apres-line-lg {
+                font-size: clamp(34px, 10vh, 52px);
+            }
+
+            .apres-body {
+                display: none;
+            }
+
+            .apres-content {
+                gap: 5px;
+            }
+
+            .hero-toggle {
+                padding: 3px 0 0;
+            }
+
+            .hero-bottom {
+                display: none;
+            }
         }
 
         /* ── prefers-reduced-motion ── */
         @media (prefers-reduced-motion: reduce) {
-            .geo-ring-1, .geo-ring-2, .geo-ring-3,
-            .geo-ring-4, .geo-ring-5,
-            .geo-sq-1, .geo-sq-2, .geo-sq-3 { animation: none; }
-            .geo-dot-1, .geo-dot-2, .geo-dot-3 { animation: none; opacity: 0.3; }
-            .hero-logo-outer.logo-floating     { animation: none; }
-            .scroll-arrow                      { animation: none; }
-        }
 
+            .geo-ring-1,
+            .geo-ring-2,
+            .geo-ring-3,
+            .geo-ring-4,
+            .geo-ring-5,
+            .geo-sq-1,
+            .geo-sq-2,
+            .geo-sq-3 {
+                animation: none;
+            }
+
+            .geo-dot-1,
+            .geo-dot-2,
+            .geo-dot-3 {
+                animation: none;
+                opacity: 0.3;
+            }
+
+            .hero-logo-outer.logo-floating {
+                animation: none;
+            }
+
+            .scroll-arrow {
+                animation: none;
+            }
+        }
     </style>
 </head>
 
@@ -1684,54 +2099,54 @@
         <!-- Background clip: canvas + geo confined here, doesn't clip mobile-nav -->
         <div class="hero-bg-clip">
 
-        <!-- z1: Confetti -->
-        <canvas id="confetti-canvas"></canvas>
+            <!-- z1: Confetti -->
+            <canvas id="confetti-canvas"></canvas>
 
-        <!-- z2: Geometric layer -->
-        <div class="geo-layer">
-            <div class="geo-px" data-depth="0.15">
-                <div class="geo-ring-1"></div>
-            </div>
-            <div class="geo-px" data-depth="0.25">
-                <div class="geo-ring-2"></div>
-            </div>
-            <div class="geo-px" data-depth="0.35">
-                <div class="geo-ring-3"></div>
-            </div>
-            <div class="geo-px" data-depth="0.55">
-                <div class="geo-ring-4"></div>
-            </div>
-            <div class="geo-px" data-depth="0.12">
-                <div class="geo-ring-5"></div>
-            </div>
-            <div class="geo-px" data-depth="0.45">
-                <div class="geo-sq-1"></div>
-            </div>
-            <div class="geo-px" data-depth="0.60">
-                <div class="geo-sq-2"></div>
-            </div>
-            <div class="geo-px" data-depth="0.50">
-                <div class="geo-sq-3"></div>
-            </div>
-            <div class="geo-px" data-depth="0.40">
-                <div class="geo-dot geo-dot-1"></div>
-            </div>
-            <div class="geo-px" data-depth="0.40">
-                <div class="geo-dot geo-dot-2"></div>
-            </div>
-            <div class="geo-px" data-depth="0.40">
-                <div class="geo-dot geo-dot-3"></div>
-            </div>
-            <svg class="geo-svg" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice" fill="none">
-                <line x1="820" y1="900" x2="1440" y2="240" style="stroke:var(--gs-a); stroke-width:1" />
-                <line x1="900" y1="900" x2="1440" y2="360" style="stroke:var(--gs-b); stroke-width:1" />
-                <line x1="0" y1="200" x2="340" y2="0" style="stroke:var(--gs-b); stroke-width:1" />
-                <line x1="1080" y1="460" x2="1140" y2="460" style="stroke:var(--gs-c); stroke-width:1" />
-                <line x1="1090" y1="472" x2="1130" y2="472" style="stroke:var(--gs-b); stroke-width:1" />
-                <line x1="680" y1="128" x2="680" y2="158" style="stroke:var(--gs-d); stroke-width:1.5" />
-                <line x1="665" y1="143" x2="695" y2="143" style="stroke:var(--gs-d); stroke-width:1.5" />
-            </svg>
-        </div><!-- /.geo-layer -->
+            <!-- z2: Geometric layer -->
+            <div class="geo-layer">
+                <div class="geo-px" data-depth="0.15">
+                    <div class="geo-ring-1"></div>
+                </div>
+                <div class="geo-px" data-depth="0.25">
+                    <div class="geo-ring-2"></div>
+                </div>
+                <div class="geo-px" data-depth="0.35">
+                    <div class="geo-ring-3"></div>
+                </div>
+                <div class="geo-px" data-depth="0.55">
+                    <div class="geo-ring-4"></div>
+                </div>
+                <div class="geo-px" data-depth="0.12">
+                    <div class="geo-ring-5"></div>
+                </div>
+                <div class="geo-px" data-depth="0.45">
+                    <div class="geo-sq-1"></div>
+                </div>
+                <div class="geo-px" data-depth="0.60">
+                    <div class="geo-sq-2"></div>
+                </div>
+                <div class="geo-px" data-depth="0.50">
+                    <div class="geo-sq-3"></div>
+                </div>
+                <div class="geo-px" data-depth="0.40">
+                    <div class="geo-dot geo-dot-1"></div>
+                </div>
+                <div class="geo-px" data-depth="0.40">
+                    <div class="geo-dot geo-dot-2"></div>
+                </div>
+                <div class="geo-px" data-depth="0.40">
+                    <div class="geo-dot geo-dot-3"></div>
+                </div>
+                <svg class="geo-svg" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice" fill="none">
+                    <line x1="820" y1="900" x2="1440" y2="240" style="stroke:var(--gs-a); stroke-width:1" />
+                    <line x1="900" y1="900" x2="1440" y2="360" style="stroke:var(--gs-b); stroke-width:1" />
+                    <line x1="0" y1="200" x2="340" y2="0" style="stroke:var(--gs-b); stroke-width:1" />
+                    <line x1="1080" y1="460" x2="1140" y2="460" style="stroke:var(--gs-c); stroke-width:1" />
+                    <line x1="1090" y1="472" x2="1130" y2="472" style="stroke:var(--gs-b); stroke-width:1" />
+                    <line x1="680" y1="128" x2="680" y2="158" style="stroke:var(--gs-d); stroke-width:1.5" />
+                    <line x1="665" y1="143" x2="695" y2="143" style="stroke:var(--gs-d); stroke-width:1.5" />
+                </svg>
+            </div><!-- /.geo-layer -->
         </div><!-- /.hero-bg-clip -->
 
         <!-- Geo layer above -->
@@ -1749,8 +2164,8 @@
                     <a href="#" class="nav-logo">
                         <span class="nav-logo-text">NYR FESTAS</span>
                         <img class="nav-logo-img"
-                             src="https://res.cloudinary.com/dbcz5yhgs/image/upload/v1772106248/LOGO_NYR_ufn70y.png"
-                             alt="Nyr Festas">
+                            src="https://res.cloudinary.com/dbcz5yhgs/image/upload/v1772106248/LOGO_NYR_ufn70y.png"
+                            alt="Nyr Festas">
                     </a>
                     <nav>
                         <ul class="header-nav">
@@ -1763,6 +2178,10 @@
                         <button class="hamburger" id="hamburger" aria-label="Abrir menu" aria-expanded="false">
                             <span></span><span></span><span></span>
                         </button>
+                        <button class="height-hamburger" id="height-hamburger" aria-label="Abrir menu"
+                            aria-expanded="false">
+                            <span></span><span></span><span></span>
+                        </button>
                     </nav>
                     <div class="mobile-nav" id="mobile-nav" aria-hidden="true">
                         <ul>
@@ -1773,6 +2192,19 @@
                             <li><a href="#contato">Contato</a></li>
                         </ul>
                         <div class="mobile-logins">
+                            <a href="#" class="btn-login">Login Representante</a>
+                            <a href="#" class="btn-login btn-login-primary">Login Cliente</a>
+                        </div>
+                    </div>
+                    <div class="height-nav" id="height-nav" aria-hidden="true">
+                        <ul>
+                            <li><a href="#sazonalidades">Sazonalidades</a></li>
+                            <li><a href="#produtos">Produtos</a></li>
+                            <li><a href="#sobre">Sobre</a></li>
+                            <li><a href="#faq">FAQ</a></li>
+                            <li><a href="#contato">Contato</a></li>
+                        </ul>
+                        <div class="height-nav-logins">
                             <a href="#" class="btn-login">Login Representante</a>
                             <a href="#" class="btn-login btn-login-primary">Login Cliente</a>
                         </div>
@@ -1942,7 +2374,7 @@
 
         let palette = DARK_COLORS;
         const SHAPES = ['circle', 'rect', 'line'];
-        const PIECE_COUNT = 130;
+        const PIECE_COUNT = window.innerWidth < 768 ? 55 : 130;
 
         class Piece {
             constructor(scatter = false) { this.reset(scatter); }
@@ -2275,6 +2707,42 @@
                 siteHeader.classList.remove('menu-open');
                 hamburger.setAttribute('aria-expanded', false);
                 mobileNav.setAttribute('aria-hidden', true);
+            }
+        });
+
+
+        /* ═══════════════════════════════════════════════
+           HEIGHT-HAMBURGER — menu para tablet landscape comprimido
+           Mesmo comportamento do hamburger hero.
+        ═══════════════════════════════════════════════ */
+        const heightHamburger = document.getElementById('height-hamburger');
+        const heightNav = document.getElementById('height-nav');
+
+        heightHamburger.addEventListener('click', () => {
+            const open = heightNav.classList.toggle('open');
+            heightHamburger.classList.toggle('open', open);
+            siteHeader.classList.toggle('height-menu-open', open);
+            heightHamburger.setAttribute('aria-expanded', open);
+            heightNav.setAttribute('aria-hidden', !open);
+        });
+
+        heightNav.querySelectorAll('a').forEach(a => {
+            a.addEventListener('click', () => {
+                heightNav.classList.remove('open');
+                heightHamburger.classList.remove('open');
+                siteHeader.classList.remove('height-menu-open');
+                heightHamburger.setAttribute('aria-expanded', false);
+                heightNav.setAttribute('aria-hidden', true);
+            });
+        });
+
+        document.addEventListener('click', (e) => {
+            if (heightNav.classList.contains('open') && !siteHeader.contains(e.target)) {
+                heightNav.classList.remove('open');
+                heightHamburger.classList.remove('open');
+                siteHeader.classList.remove('height-menu-open');
+                heightHamburger.setAttribute('aria-expanded', false);
+                heightNav.setAttribute('aria-hidden', true);
             }
         });
 
